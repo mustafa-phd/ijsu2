@@ -1,0 +1,23 @@
+---
+import '../assets/css/style.css';
+import { ClientRouter } from "astro:transitions";
+const { title, description, htmlClass, bodyClass, mainClass } = Astro.props;
+---
+<!doctype html>
+<html lang="ar" dir="rtl" class:list={[htmlClass]}>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.rtl.min.css">
+		<title>{title}</title>
+		<ClientRouter/>
+	</head>
+	<body class:list={[bodyClass]}>
+		<slot name="nav"/>
+		<slot name="header"/>
+		<main class:list={[mainClass]}>
+			<slot/>
+		</main>
+		<script is:inline src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js"></script>
+	</body>
+</html>

@@ -1,0 +1,299 @@
+---
+import Layout from '../layouts/Layout.astro';
+import FilterBar from '../components/FilterBar.astro';
+import SearchBar from '../components/SearchBar.astro';
+---
+
+<Layout title="الكتب" mainClass="p-4 container">
+	<nav class="navbar navbar-expand-lg px-2 bg-primary" data-bs-theme="dark" slot="nav">
+		<div class="container-xl">
+			<div class="col">
+				<button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterBar" aria-controls="filterBar" aria-expanded="false" aria-label="فتح حقول الفلترة">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="offcanvas offcanvas-top bg-primary" tabindex="-1" id="filterBar" aria-labelledby="filterBarLabel">
+					<div class="offcanvas-header">
+						<h5 class="offcanvas-title" id="filterBarLabel">فلترة الكتب</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="اغلاق"></button>
+					</div>
+					<div class="offcanvas-body">
+						<FilterBar/>
+						<button class="btn btn-success mt-3 w-100 d-lg-none" type="button" data-bs-dismiss="offcanvas" >عرض</button>
+					</div>
+				</div>
+			</div>
+			<div class="col-auto">
+				<a class="navbar-brand ms-3" href="/">
+					<img src="/assets/logo/96x96.png" alt="ijsu" width="46" height="46" transition:name="logo">
+				</a>
+			</div>
+			<div class="col">
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#searchBar" aria-controls="searchBar" aria-expanded="false" aria-label="فتح حقل البحث">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="searchBar">
+					<SearchBar/>
+				</div>
+			</div>
+		</div>
+	</nav>
+
+
+
+
+
+	<div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 row-cols-xl-5 row-cols-xxl-6 g-4 mb-4">
+		
+		<div class="col">
+			<div class="card h-100">
+				<div class="ratio a4">
+					<img src="https://placehold.co/595x842/EEE/31343C" class="card-img-top" alt="...">
+				</div>
+				<div class="card-body">
+					<h5 class="card-title">المعالج الدقيق</h5>
+					<h6 class="card-subtitle mb-3 text-body-secondary">كلية: التقنية الهندسية · قسم: هندسة الحاسوب · المرحلة: الثالثة</h6>
+					<div class="row">
+						<div class="col">
+							<a class="btn btn-primary w-100 w-100" href="#" role="button">قراءة</a>
+						</div>
+						<div class="col">
+							<a class="btn btn-success w-100 w-100" href="#" role="button">تحميل</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="col">
+			<div class="card h-100">
+				<div class="ratio a4">
+					<img src="https://placehold.co/595x842/EEE/31343C" class="card-img-top" alt="...">
+				</div>
+				<div class="card-body">
+					<h5 class="card-title">Card title</h5>
+					<h6 class="card-subtitle mb-3 text-body-secondary">Card subtitle</h6>
+					<div class="row">
+						<div class="col">
+							<a class="btn btn-primary w-100 w-100" href="#" role="button">قراءة</a>
+						</div>
+						<div class="col">
+							<a class="btn btn-success w-100 w-100" href="#" role="button">تحميل</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="col">
+			<div class="card h-100">
+				<div class="ratio a4">
+					<img src="https://placehold.co/595x842/EEE/31343C" class="card-img-top" alt="...">
+				</div>
+				<div class="card-body">
+					<h5 class="card-title">Card title</h5>
+					<h6 class="card-subtitle mb-3 text-body-secondary">Card subtitle</h6>
+					<div class="row">
+						<div class="col">
+							<a class="btn btn-primary w-100 w-100" href="#" role="button">قراءة</a>
+						</div>
+						<div class="col">
+							<a class="btn btn-success w-100 w-100" href="#" role="button">تحميل</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="col">
+			<div class="card h-100">
+				<div class="ratio a4">
+					<img src="https://placehold.co/595x842/EEE/31343C" class="card-img-top" alt="...">
+				</div>
+				<div class="card-body">
+					<h5 class="card-title">Card title</h5>
+					<h6 class="card-subtitle mb-3 text-body-secondary">Card subtitle</h6>
+					<div class="row">
+						<div class="col">
+							<a class="btn btn-primary w-100 w-100" href="#" role="button">قراءة</a>
+						</div>
+						<div class="col">
+							<a class="btn btn-success w-100 w-100" href="#" role="button">تحميل</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="col">
+			<div class="card h-100">
+				<div class="ratio a4">
+					<img src="https://placehold.co/595x842/EEE/31343C" class="card-img-top" alt="...">
+				</div>
+				<div class="card-body">
+					<h5 class="card-title">Card title</h5>
+					<h6 class="card-subtitle mb-3 text-body-secondary">Card subtitle</h6>
+					<div class="row">
+						<div class="col">
+							<a class="btn btn-primary w-100 w-100" href="#" role="button">قراءة</a>
+						</div>
+						<div class="col">
+							<a class="btn btn-success w-100 w-100" href="#" role="button">تحميل</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="col">
+			<div class="card h-100">
+				<div class="ratio a4">
+					<img src="https://placehold.co/595x842/EEE/31343C" class="card-img-top" alt="...">
+				</div>
+				<div class="card-body">
+					<h5 class="card-title">Card title</h5>
+					<h6 class="card-subtitle mb-3 text-body-secondary">Card subtitle</h6>
+					<div class="row">
+						<div class="col">
+							<a class="btn btn-primary w-100 w-100" href="#" role="button">قراءة</a>
+						</div>
+						<div class="col">
+							<a class="btn btn-success w-100 w-100" href="#" role="button">تحميل</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="col">
+			<div class="card h-100">
+				<div class="ratio a4">
+					<img src="https://placehold.co/595x842/EEE/31343C" class="card-img-top" alt="...">
+				</div>
+				<div class="card-body">
+					<h5 class="card-title">Card title</h5>
+					<h6 class="card-subtitle mb-3 text-body-secondary">Card subtitle</h6>
+					<div class="row">
+						<div class="col">
+							<a class="btn btn-primary w-100 w-100" href="#" role="button">قراءة</a>
+						</div>
+						<div class="col">
+							<a class="btn btn-success w-100 w-100" href="#" role="button">تحميل</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="col">
+			<div class="card h-100">
+				<div class="ratio a4">
+					<img src="https://placehold.co/595x842/EEE/31343C" class="card-img-top" alt="...">
+				</div>
+				<div class="card-body">
+					<h5 class="card-title">Card title</h5>
+					<h6 class="card-subtitle mb-3 text-body-secondary">Card subtitle</h6>
+					<div class="row">
+						<div class="col">
+							<a class="btn btn-primary w-100 w-100" href="#" role="button">قراءة</a>
+						</div>
+						<div class="col">
+							<a class="btn btn-success w-100 w-100" href="#" role="button">تحميل</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="col">
+			<div class="card h-100">
+				<div class="ratio a4">
+					<img src="https://placehold.co/595x842/EEE/31343C" class="card-img-top" alt="...">
+				</div>
+				<div class="card-body">
+					<h5 class="card-title">Card title</h5>
+					<h6 class="card-subtitle mb-3 text-body-secondary">Card subtitle</h6>
+					<div class="row">
+						<div class="col">
+							<a class="btn btn-primary w-100 w-100" href="#" role="button">قراءة</a>
+						</div>
+						<div class="col">
+							<a class="btn btn-success w-100 w-100" href="#" role="button">تحميل</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="col">
+			<div class="card h-100">
+				<div class="ratio a4">
+					<img src="https://placehold.co/595x842/EEE/31343C" class="card-img-top" alt="...">
+				</div>
+				<div class="card-body">
+					<h5 class="card-title">Card title</h5>
+					<h6 class="card-subtitle mb-3 text-body-secondary">Card subtitle</h6>
+					<div class="row">
+						<div class="col">
+							<a class="btn btn-primary w-100 w-100" href="#" role="button">قراءة</a>
+						</div>
+						<div class="col">
+							<a class="btn btn-success w-100 w-100" href="#" role="button">تحميل</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="col">
+			<div class="card h-100">
+				<div class="ratio a4">
+					<img src="https://placehold.co/595x842/EEE/31343C" class="card-img-top" alt="...">
+				</div>
+				<div class="card-body">
+					<h5 class="card-title">Card title</h5>
+					<h6 class="card-subtitle mb-3 text-body-secondary">Card subtitle</h6>
+					<div class="row">
+						<div class="col">
+							<a class="btn btn-primary w-100 w-100" href="#" role="button">قراءة</a>
+						</div>
+						<div class="col">
+							<a class="btn btn-success w-100 w-100" href="#" role="button">تحميل</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="col">
+			<div class="card h-100">
+				<div class="ratio a4">
+					<img src="https://placehold.co/595x842/EEE/31343C" class="card-img-top" alt="...">
+				</div>
+				<div class="card-body">
+					<h5 class="card-title">Card title</h5>
+					<h6 class="card-subtitle mb-3 text-body-secondary">Card subtitle</h6>
+					<div class="row">
+						<div class="col">
+							<a class="btn btn-primary w-100 w-100" href="#" role="button">قراءة</a>
+						</div>
+						<div class="col">
+							<a class="btn btn-success w-100 w-100" href="#" role="button">تحميل</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+	
+	<nav aria-label="Page navigation example">
+		<ul class="pagination justify-content-center">
+			<li class="page-item disabled"><a class="page-link" href="#">&laquo; الماضي</a></li>
+			<li class="page-item"><a class="page-link" href="#">1</a></li>
+			<li class="page-item active"><a class="page-link" href="#" aria-current="page">2</a></li>
+			<li class="page-item"><a class="page-link" href="#">3</a></li>
+			<li class="page-item"><a class="page-link" href="#">التالي &raquo;</a></li>
+		</ul>
+	</nav>
+	
+</Layout>

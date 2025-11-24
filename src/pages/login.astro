@@ -1,0 +1,84 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { auth } from "../utils/auth";
+const session = await auth.api.getSession({ headers: request.headers })
+if (session) return Astro.redirect("/lms/");
+
+if (Astro.request.method === "POST") {
+	const data = await Astro.request.formData();
+	const name = data.get("user");
+	const password = data.get("password");
+}
+---
+<Layout title="دخول" bodyClass="d-flex align-items-center justify-content-center p-4" mainClass="card login-card">
+	<header class="card-header text-center bg-transparent border-0">
+		<hgroup>
+			<h1 class="mb-2">تسجيل الدخول</h1>
+			<p class="h2 mb-4 text-secondary">الإدارة</p>
+		</hgroup>
+		<img src="/assets/logo/512x512.png" alt="شعار جامعة الأمام جعفر الصادق (ع)">
+	</header>
+	<form class="card-body needs-validation" id="login">
+		<div class="mb-3">
+			<label for="user" class="form-label fw-medium">عنوان إسم المستخدم:</label>
+			<input type="email" class="form-control form-control-lg" id="email" name="email" placeholder="e.g. admin" autocomplete="username" required>
+			<div class="invalid-feedback">يرجى إدخال عنوان إسم المستخدم.</div>
+		</div>
+		<div class="mb-4">
+			<label for="password" class="form-label fw-medium">كلمة المرور:</label>
+			<input type="password" class="form-control form-control-lg" id="password" name="password" placeholder="************" autocomplete="current-password" minlength="8" required>
+			<div class="invalid-feedback">يرجى إدخال كلمة المرور.</div>
+		</div>
+		<button type="submit" class="btn btn-primary btn-lg w-100 focus-ring fw-bold shadow-sm">تسجيل الدخول</button>
+		<hr>
+	</form>
+	<footer class="card-footer">
+		<button class="btn btn-primary btn-lg w-100 focus-ring fw-bold shadow-sm" id="passkey">مفتاح المرور</button>
+		<br><br>
+		<button id="registerPasskeyBtn" class="btn btn-primary btn-lg w-100 focus-ring fw-bold shadow-sm" style="margin-top:1rem;">تسجيل جهاز جديد (Passkey)</button>
+	</footer>
+	<script>
+		import { auth } from "../../../utils/authClient"
+		document.getElementById("login").addEventListener("submit", async (e) => {
+			e.preventDefault();
+			const { data, error }  = await signIn.email({
+				document.getElementById("email").value,
+				document.getElementById("password").value
+			})
+			if (error) {
+			const { code, message, status, statusText } = tmp.error
+			alert(`[${code}] ${message} (${status} ${statusText})`)
+			} else window.location.href = "/lms/" 
+		})
+		document.getElementById('passkey').addEventListener('click', async () => {
+			const { data, error } = await authClient.signIn.passkey()
+			if (error) {
+				alert("فشل الدخول بمفتاح المرور: " + error.message)
+			} else window.location.href = "/lms/"
+		})
+		
+		
+		
+		
+		document.getElementById('registerPasskeyBtn').addEventListener('click', async () => {
+			const email = prompt("أدخل بريدك لإنشاء مفتاح مرور جديد:");
+			const { data, error } = await authClient.signUp.email({
+				email,
+				password: "abcd&1234",
+				name: "Mustafa"
+			});
+
+			if(!error || error.message.includes("already")) {
+				const pkRes = await authClient.user.passkey.add();
+				
+				if(pkRes.error) {
+					alert("فشل إضافة المفتاح: " + pkRes.error.message);
+				} else {
+					alert("تم إضافة المفتاح بنجاح! يمكنك الآن الدخول بالزر العلوي.");
+				}
+			} else {
+				alert("خطأ: " + error.message);
+			}
+		});
+	</script>
+</Layout>
