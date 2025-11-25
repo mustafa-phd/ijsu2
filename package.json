@@ -1,16 +1,19 @@
 {
-  "name": "ijsu",
-  "type": "module",
-  "version": "0.0.1",
-  "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
-    "astro": "astro"
-  },
-  "dependencies": {
-    "astro": "^5.15.1",
-    "better-auth": "^1.3.34",
-    "sqlite": "^5.1.1"
-  }
+	"name": "ijsu library",
+	"type": "module",
+	"version": "1.0.0",
+	"scripts": {
+		"dev": "dotenv -- astro dev",
+		"build": "dotenv -- astro build",
+		"preview": "dotenv -- astro preview",
+		"astro": "astro"
+	},
+	"dependencies": {
+		"astro": "^5.15.1",
+		"@astrojs/node": "^9.5.1",
+		"better-sqlite3": "^12.4.6",
+		"better-auth": "^1.3.34",
+		"@better-auth/passkey": "^1.4.1",
+		"argon2": "^0.44.0",
+	}
 }

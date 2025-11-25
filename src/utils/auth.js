@@ -1,10 +1,10 @@
-import { betterAuth } from "better-auth";
-import Database from "node:sqlite";
-import { passkey } from "better-auth/plugins/passkey";
-import argon2 from "argon2";
+import { betterAuth } from "better-auth"
+import { passkey } from "better-auth/plugins/passkey"
+import argon2 from "argon2"
+import Database from "better-sqlite3"
 
 export const auth = betterAuth({
-	database: new Database("sqlite.db"),
+	database: new Database("./sqlite.db"),
 	emailAndPassword: {
 		enabled: true,
 		password: {
@@ -12,12 +12,12 @@ export const auth = betterAuth({
 			verify: async ({ hash, password }) => argon2.verify(hash, password)
 		}
 	},
-	plugins: [
-		passkey()
-	],
 	rateLimit: {
 		enabled: true,
 		window: 180,
 		max: 15,
-	}
+	},
+	plugins: [
+		passkey()
+	]
 })
