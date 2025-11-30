@@ -1,62 +1,69 @@
-<form class="row row-cols-1 row-cols-lg-2 g-2">
+---
+import schema from '../utils/schema.json'
+const {Router} = Astro.props
+const params = Astro.url.searchParams
+const pCollege = params.get('college')
+const pDepartment = params.get('department')
+const pStage = params.get('stage')
+const pCourse = params.get('course')
+const departments = (pCollege && schema.colleges[pCollege]) || []
+---
+<div class="row row-cols-1 row-cols-lg-2 g-2">
 	<div class="col">
 		<div class="input-group">
 			<div class="form-floating">
-				<select class="form-select" id="floatingSelect" aria-label="أختيار الكلية">
-					<option selected>أختر</option>
-					<option value="1">التقنية الهندسية</option>
-					<option value="2">التقنيات الصحية والطبية</option>
-					<option value="3">القانون والسياسة</option>
-					<option value="3">التربية</option>
-					<option value="3">العلوم الإدارية والمالية</option>
+				<select class="router form-select" id="college" name="college">
+					<option value="">الكل</option>
+					{Object.keys(schema.colleges).map((cName) => (
+						<option value={cName} selected={cName === pCollege}>{cName}</option>
+					))}
 				</select>
-				<label for="floatingSelect">الكلية</label>
+				<label for="college">الكلية</label>
 			</div>
 			<div class="form-floating">
-				<select class="form-select" id="floatingSelect" aria-label="أختيار القسم">
-					<option selected>أختر</option>
-					<!-- التقنية الهندسية -->
-					<option value="2">هندسة الحاسوب</option>
-					<option value="1">هندسة تقنيات الحاسوب</option>
-					<option value="3">هندسة تقنيات ميكانيك القوى</option>
-					<!-- التقنيات الصحية والطبية -->
-					<option value="1">تقنيات المختبرات الطبية</option>
-					<option value="2">تقنيات التجميل والليزر</option>
-					<!-- القانون والسياسة -->
-					<option value="3">القانون</option>
-					<!-- التربية -->
-					<option value="2">علوم القران</option>
-					<option value="3">اللغة الانكليزية</option>
-					<option value="1">التربية الفنية</option>
-					<!-- العلوم الإدارية والمالية -->
-					<option value="3">المحاسبة</option>
-					<option value="1">ادارة الاعمال</option>
-					<option value="2">اقتصاديات نفط وغاز</option>
+				<select class="router form-select" id="department" name="department" disabled={!pCollege}>
+					<option value="">الكل</option>
+					{departments.map((dName) => (
+						<option value={dName} selected={dName === pDepartment}>{dName}</option>
+					))}
 				</select>
-				<label for="floatingSelect">القسم</label>
+				<label for="department">القسم</label>
 			</div>
 		</div>
 	</div>
 	<div class="col">
 		<div class="input-group">
 			<div class="form-floating">
-				<select class="form-select" id="floatingSelect" aria-label="أختيار المرحلة">
-					<option selected>أختر</option>
-					<option value="1">الأولى</option>
-					<option value="1">الثانية</option>
-					<option value="2">الثالثة</option>
-					<option value="3">الرابعة</option>
+				<select class="router form-select" id="stage" name="stage">
+					<option value="">الكل</option>
+					{schema.stages.map((sName) => (
+						<option value={sName} selected={sName === pStage}>{sName}</option>
+					))}
 				</select>
-				<label for="floatingSelect">المرحلة</label>
+				<label for="stage">المرحلة</label>
 			</div>
 			<div class="form-floating">
-				<select class="form-select" id="floatingSelect" aria-label="أختيار الكورس">
-					<option selected>أختر</option>
-					<option value="1">الأول</option>
-					<option value="2">الثاني</option>
+				<select class="router form-select" id="course" name="course">
+					<option value="">الكل</option>
+					{schema.courses.map((cName) => (
+						<option value={cName} selected={cName === pCourse}>{cName}</option>
+					))}
 				</select>
-				<label for="floatingSelect">الكورس</label>
+				<label for="course">الكورس</label>
 			</div>
 		</div>
 	</div>
-</form>
+</div>
+{Router && (
+<script>
+document.querySelectorAll('.router').forEach(select => {
+	select.addEventListener('change', function() {
+		const url = new URL(location)
+		const param = this.name
+		param == 'college' && url.searchParams.delete('department')
+		this.value ? url.searchParams.set(param, this.value) : url.searchParams.delete(param)
+		location.href = url
+	})
+})
+</script>
+)}

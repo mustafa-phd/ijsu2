@@ -1,87 +1,103 @@
 ---
+const title = "تسجيل الدخول"
 import Layout from '../layouts/Layout.astro';
 import { auth } from "../utils/auth";
 const session = await auth.api.getSession({ headers: Astro.request.headers })
 if (session) return Astro.redirect("/lms/")
 ---
-<Layout title="دخول" bodyClass="d-flex align-items-center justify-content-center p-4" mainClass="card login-card">
+<Layout title={title} bodyClass="d-flex align-items-center justify-content-center p-4" mainClass="card login-card">
 	<header class="card-header text-center bg-transparent border-0">
-		<hgroup>
-			<h1 class="mb-2">تسجيل الدخول</h1>
-			<p class="h2 mb-4 text-secondary">الإدارة</p>
-		</hgroup>
+		<h1 class="mb-3">{title}</h1>
 		<img src="/assets/logo/512x512.png" alt="شعار جامعة الأمام جعفر الصادق (ع)">
 	</header>
-	<form class="card-body" id="login">
+	<form class="card-body needs-validation" id="login" novalidate>
+		<div class="alert alert-danger d-none d-flex align-items-center shadow-sm mb-3" role="alert" id="alert" dir="ltr">
+			<svg class="bi flex-shrink-0 ms-2" viewBox="0 0 16 16" width="16" height="16" role="img" aria-label="تحذير:"><path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg>
+			<div id="alertMsg"></div>
+		</div>
 		<div class="mb-3">
-			<label for="email" class="form-label fw-medium">عنوان إسم المستخدم:</label>
-			<input type="email" class="form-control form-control-lg" id="email" name="email" placeholder="e.g. admin" autocomplete="username" required>
-			<div class="invalid-feedback">يرجى إدخال عنوان إسم المستخدم.</div>
+			<label for="email" class="form-label fw-medium">البريد الإلكتروني:</label>
+			<div class="input-group">
+				<span class="input-group-text" id="emailIcon"><svg class="bi" viewBox="0 0 16 16" width="16" height="16" role="img"><path d="M2 2A2 2 0 0 0 .05 3.555L8 8.414l7.95-4.859A2 2 0 0 0 14 2zm-2 9.8V4.698l5.803 3.546zm6.761-2.97-6.57 4.026A2 2 0 0 0 2 14h6.256A4.5 4.5 0 0 1 8 12.5a4.49 4.49 0 0 1 1.606-3.446l-.367-.225L8 9.586zM16 9.671V4.697l-5.803 3.546.338.208A4.5 4.5 0 0 1 12.5 8c1.414 0 2.675.652 3.5 1.671"/><path d="M15.834 12.244c0 1.168-.577 2.025-1.587 2.025-.503 0-1.002-.228-1.12-.648h-.043c-.118.416-.543.643-1.015.643-.77 0-1.259-.542-1.259-1.434v-.529c0-.844.481-1.4 1.26-1.4.585 0 .87.333.953.63h.03v-.568h.905v2.19c0 .272.18.42.411.42.315 0 .639-.415.639-1.39v-.118c0-1.277-.95-2.326-2.484-2.326h-.04c-1.582 0-2.64 1.067-2.64 2.724v.157c0 1.867 1.237 2.654 2.57 2.654h.045c.507 0 .935-.07 1.18-.18v.731c-.219.1-.643.175-1.237.175h-.044C10.438 16 9 14.82 9 12.646v-.214C9 10.36 10.421 9 12.485 9h.035c2.12 0 3.314 1.43 3.314 3.034zm-4.04.21v.227c0 .586.227.8.581.8.31 0 .564-.17.564-.743v-.367c0-.516-.275-.708-.572-.708-.346 0-.573.245-.573.791"/></svg></span>
+				<input type="email" class="form-control form-control-lg" id="email" name="email" placeholder="e.g. mustafa@ijsu.edu.iq" autocomplete="username webauthn" required aria-describedby="emailIcon">
+				<div class="invalid-feedback">يرجى إدخال البريد الإلكتروني!</div>
+			</div>
 		</div>
 		<div class="mb-4">
 			<label for="password" class="form-label fw-medium">كلمة المرور:</label>
-			<input type="password" class="form-control form-control-lg" id="password" name="password" placeholder="************" autocomplete="current-password" minlength="8" required>
-			<div class="invalid-feedback">يرجى إدخال كلمة المرور.</div>
+			<div class="input-group">
+				<span class="input-group-text" id="passwordIcon"><svg class="bi" viewBox="0 0 16 16" width="16" height="16" role="img"><path fill-rule="evenodd" d="M8 0a4 4 0 0 1 4 4v2.05a2.5 2.5 0 0 1 2 2.45v5a2.5 2.5 0 0 1-2.5 2.5h-7A2.5 2.5 0 0 1 2 13.5v-5a2.5 2.5 0 0 1 2-2.45V4a4 4 0 0 1 4-4m0 1a3 3 0 0 0-3 3v2h6V4a3 3 0 0 0-3-3"/></svg></span>
+				<input type="password" class="form-control form-control-lg" id="password" name="password" placeholder="************" autocomplete="current-password webauthn" minlength="8" required aria-describedby="passwordIcon">
+				<div class="invalid-feedback">يرجى إدخال كلمة المرور!</div>
+			</div>
 		</div>
-		<button type="submit" class="btn btn-primary btn-lg w-100 focus-ring fw-bold shadow-sm">تسجيل الدخول</button>
+		<button type="submit" class="btn btn-primary btn-lg w-100 focus-ring fw-bold shadow-sm mb-3">
+			<span class="spinner-grow spinner-grow-sm d-none" id="btnSpinner" role="status" aria-hidden="true"></span>
+			<span id="btnText"><svg class="bi" viewBox="0 0 16 16" width="16" height="16" role="img"><path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"/><path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/></svg> تسجيل الدخول</span>
+		</button>
+		<hr class="mb-3">
+		<button type="button" class="btn btn-primary btn-lg w-100 focus-ring fw-bold shadow-sm" id="passkey"><svg class="bi" viewBox="0 0 16 16" width="16" height="16" role="img"><path fill-rule="evenodd" d="M8 0c-.69 0-1.843.265-2.928.56-1.11.3-2.229.655-2.887.87a1.54 1.54 0 0 0-1.044 1.262c-.596 4.477.787 7.795 2.465 9.99a11.8 11.8 0 0 0 2.517 2.453c.386.273.744.482 1.048.625.28.132.581.24.829.24s.548-.108.829-.24a7 7 0 0 0 1.048-.625 11.8 11.8 0 0 0 2.517-2.453c1.678-2.195 3.061-5.513 2.465-9.99a1.54 1.54 0 0 0-1.044-1.263 63 63 0 0 0-2.887-.87C9.843.266 8.69 0 8 0m0 5a1.5 1.5 0 0 1 .5 2.915l.385 1.99a.5.5 0 0 1-.491.595h-.788a.5.5 0 0 1-.49-.595l.384-1.99A1.5 1.5 0 0 1 8 5"/></svg> مفتاح المرور</button>
 	</form>
-	<footer class="card-footer">
-		<button type="button" class="btn btn-primary btn-lg w-100 focus-ring fw-bold shadow-sm" id="passkey">مفتاح المرور</button>
-		<br><br>
-		<button type="button" id="register" class="btn btn-primary btn-lg w-100 focus-ring fw-bold shadow-sm" style="margin-top:1rem;">تسجيل جهاز جديد</button>
+	<footer class="card-footer ">
+		<p class="text-sm text-center my-1">&copy; 2025 جميع الحقوق محفوظة.</p>
 	</footer>
 	<script>
 		import { authClient } from "../utils/authClient"
 		const form = document.getElementById('login')
+		const alertTag = document.getElementById('alert')
+		const alertMsg = document.getElementById('alertMsg')
+		const formState = (is) => {
+			const formControls = form.querySelectorAll('input, button')
+			const btnSpinner = document.getElementById('btnSpinner')
+			const btnText = document.getElementById('btnText')
+			formControls.forEach(control => { control.disabled = is })
+		    if (is) {
+		        btnSpinner.classList.remove('d-none')
+		        btnText.textContent = "جاري المعالجة..."
+		    } else {
+		        btnSpinner.classList.add('d-none')
+		        btnText.textContent = "تسجيل الدخول"
+		    }
+		}
 		form.addEventListener("submit", async (e) => {
 			e.preventDefault()
-			form.classList.add('needs-validation')
-			if (!loginForm.checkValidity()) return
-			
+			form.classList.add('was-validated')
+			if (!form.checkValidity()) return
 			const formData = new FormData(form)
 			await authClient.signIn.email({
 				email: formData.get('email').trim(),
-				password: formData.get('password').trim(),
+				password: formData.get('password'),
 				rememberMe: true,
 				callbackURL: "/lms/"
-			},{
+			}, {
 				onRequest: (ctx) => {
-					toggleFormState(true)
-					alertBox.classList.add('d-none')
+					formState(true)
+					alertTag.classList.add('d-none')
 				},
 				onError: (ctx) => {
-					toggleFormState(false)
-					const { error } = ctx
-					alertMsg.textContent = `${error.message} – ${error.code}`
-					alertBox.classList.remove('d-none')
+					formState(false)
+					alertMsg.textContent = ctx.error.message
+					alertTag.classList.remove('d-none')
 				}
 			})
 		})
 		document.getElementById('passkey').addEventListener('click', async () => {
-			const { data, error } = await authClient.signIn.passkey()
-			if (error) {
-				alert("فشل الدخول بمفتاح المرور: " + error.message)
-			} else window.location.href = "/lms/"
-		})
-		
-		/*document.getElementById('register').addEventListener('click', async () => {
-			await authClient.signUp.email({
-				email: "w@w.w",
-				password: "Abcd&1234",
-				name: "Mustafa",
-				callbackURL: "/lms/users/"
-			}, {
-				onError: (ctx) => {
-					const { error } = ctx
-					let msg = error.message
-					if (error.status === 422) {
-						msg = "البيانات المدخلة غير صحيحة أو كلمة المرور ضعيفة."
-					} else if (error.status === 409) {
-						msg = "هذا البريد الإلكتروني مسجل بالفعل."
+			await authClient.signIn.passkey({
+				fetchOptions: {
+					onSuccess(ctx) {
+						window.location.href = "/lms/"
+					},
+					onRequest: (ctx) => {
+						formState(true)
+						alertTag.classList.add('d-none')
+					},
+					onError: (ctx) => {
+						formState(false)
+						alertMsg.textContent = ctx.error.message
+						alertTag.classList.remove('d-none')
 					}
-					alert(`[خطأ] ${msg}`)
 				}
 			})
-		})*/
+		})
 	</script>
 </Layout>

@@ -1,8 +1,9 @@
 ---
+const title = "مكتبة جامعة الأمام جعفر الصادق (ع)"
 import Layout from '../layouts/Layout.astro'
 export const prerender = true
 ---
-<Layout title="جامعة الأمام جعفر الصادق (ع)">
+<Layout title={title}>
 	<header slot="header" class="hero h-100 p-3">
 		<div class="roow hero-head">
 			<img src="https://upload.wikimedia.org/wikipedia/commons/b/bf/Coat_of_arms_of_Iraq.svg" height="100" alt="جمهورية العراق">
@@ -11,7 +12,7 @@ export const prerender = true
 			<div class="text-center">
 			<img class="rounded-pill mb-5" style="max-width:320px;width:70%;box-shadow:0 0 45px #C79B40;" src="/assets/logo/512x512.png" alt="شعار جامعة الأمام جعفر الصادق (ع)" transition:name="logo">
 			<hgroup>
-				<h1 class="display-4 mb-3">مكتبة جامعة الأمام جعفر الصادق (ع)</h1>
+				<h1 class="display-4 mb-3">{title}</h1>
 				<p class="display-6 mb-4 text-secondary-emphasis">فرع ميسان</p>
 			</hgroup>
 			<a class="btn btn-primary btn-lg rounded-pill fw-bold shadow-sm" href="/books/">دخول</a>

@@ -13,19 +13,23 @@ const {head, data, foot} = Astro.props
 			</tr>
 		</thead>
 	)}
+	{data.length > 0 ? (
 		<tbody class="table-group-divider">
 		{data.map(row => (
 			<tr>
-				<th scope="row">{row[0]}</th>
-			{row.slice(1).map(col => (
+				<th scope="row">{row[1]}</th>
+			{row.slice(2).map(col => (
 				<td>{col}</td>
 			))}
-				<td><button type="button" class="btn btn-primary me-2">تعديل</button><button type="button" class="btn btn-danger">حذف</button></td>
+				<td><button type="button" class="btn btn-danger" id={row[0]}>حذف</button></td>
 			</tr>
 		))}
 		</tbody>
+	) : (
+		<caption class="text-center">لا يوجد عناصر</caption>
+	)}
 	{foot && (
-		<tfoot>
+		<tfoot class="table-group-divider">
 			<tr>
 			{foot.map(footer => (
 				<th scope="col">{footer}</th>

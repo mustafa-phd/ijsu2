@@ -1,24 +1,16 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import FilterBar from '../../components/FilterBar.astro';
-import SearchBar from '../../components/SearchBar.astro';
-import Table from '../../components/Table.astro';
-
-const head = ["إسم الكتاب", "إسم الأستاذ", "الكلية", "القسم", "المرحلة", "الكورس"]
-const data = [
-["تطوير الويب", "ا.م.د احمد صالح", "الكلية التقنية الهندسية", "هندسة الحاسوب", "الثالثة", "الأول"],
-["تطوير الويب/عملي", "م.ب محمد قاسم", "الكلية التقنية الهندسية", "هندسة الحاسوب", "الثالثة", "الأول"],
-["المعالج الدقيق", "م.م عباس علي عبيدة", "الكلية التقنية الهندسية", "هندسة الحاسوب", "الثالثة", "الأول"],
-["المعالج الدقيق/عملي", "م.ب زهراء علي", "الكلية التقنية الهندسية", "هندسة الحاسوب", "الثالثة", "الأول"],
-["معمارية الحاسوب", "م.م محمد حمدان", "الكلية التقنية الهندسية", "هندسة الحاسوب", "الثالثة", "الأول"],
-["هندسة البرمجيات", "م.م سيف الدين زكي", "الكلية التقنية الهندسية", "هندسة الحاسوب", "الثالثة", "الأول"],
-["نظم وإشارات", "م.م علي جاسم", "الكلية التقنية الهندسية", "هندسة الحاسوب", "الثالثة", "الأول"],
-["الاحتمالايات", "م.م همام طه", "الكلية التقنية الهندسية", "هندسة الحاسوب", "الثالثة", "الأول"]
-];
-
+const title = "إدارة الكتب"
+import Layout from '../../layouts/Layout.astro'
+import FilterBar from '../../components/FilterBar.astro'
+import SearchBar from '../../components/SearchBar.astro'
+import Table from '../../components/Table.astro'
+const params = Astro.url.searchParams
+import { getBooks } from '../../utils/books.js'
+const { books, totalPages, currentPage } = getBooks({ query: params.get('q'), queryType: params.get('qType'), college: params.get('college'), department: params.get('department'), stage: params.get('stage'), course: params.get('course'), page: params.get('p') })
+const data = books.map((book) => ([book.id, book.title, book.profName, book.college, book.department, book.stage, book.course]))
 ---
 
-<Layout title="إدارة الكتب">
+<Layout title={title}>
 	<nav class="navbar navbar-expand-lg px-2 bg-primary border-bottom border-body" data-bs-theme="dark" slot="nav">
 		<div class="container">
 			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#searchBar" aria-controls="searchBar" aria-expanded="false" aria-label="فتح حقل البحث">
@@ -35,55 +27,64 @@ const data = [
 	
 	<div class="p-4">
 		<div class="d-flex justify-content-between mb-5">
-			<h1>إدارة الكتب</h1>
-			<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addBook">إضافة كتاب</button>
-			<form method="post" enctype="multipart/form-data" class="modal fade" id="addBook" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="addBookLabel" aria-hidden="true">
-				<div class="modal-dialog modal-dialog-scrollable">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h2 class="modal-title fs-5" id="addBookLabel">معلومات الكتاب</h2>
-							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="الغاء"></button>
-						</div>
-						<div class="modal-body">
-							<div class="mb-3">
-								<label for="book" class="form-label">رفع الكتاب</label>
-								<input class="form-control" type="file" id="book" name="book">
-							</div>
-							<div class="input-group mb-3">
-								<div class="form-floating">
-									<input type="text" class="form-control" id="bookTitle" name="bookTitle" placeholder="تطوير الويب">
-									<label for="bookTitle" class="form-label">عنوان الكتاب</label>
-								</div>
-								<div class="form-floating">
-									<input type="text" class="form-control" id="profName" name="profName" placeholder="Default input">
-									<label for="profName" class="form-label">إسم الأستاذ</label>
-								</div>
-							</div>
-							<FilterBar/>
-							<div class="mt-3">
-								<label for="bookCover" class="form-label">غلاف الكتاب (اختياري)</label>
-								<input class="form-control" type="file" id="bookCover" name="bookCover" aria-describedby="bookCoverHelpBlock">
-								<div id="bookCoverHelpBlock" class="form-text">إذا لم ترفع غلاف للكتاب، سيتم أخذ الصفحة الأولى كغلاف</div>
-							</div>
-						</div>
-						<div class="modal-footer">
-							<button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">الغاء</button>
-							<button type="submit" class="btn btn-primary">رفع</button>
-						</div>
-					</div>
-				</div>
-			</form>
+			<h1>{title}</h1>
+			<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add">إضافة كتاب</button>
 		</div>
 		
 		<div class="row row-cols-1 row-cols-lg-2 g-3">
 			<div class="col">
-				<FilterBar/>
+				<FilterBar Router={true} />
 			</div>
 			<div class="col">
 				<SearchBar/>
 			</div>
 		</div>
 	</div>
+	<form method="post" enctype="multipart/form-data" class="modal fade needs-validation" novalidate id="add" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="addLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-scrollable">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h2 class="modal-title fs-5" id="addLabel">معلومات الكتاب</h2>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="الغاء"></button>
+				</div>
+				<div class="modal-body">
+					<div class="mb-3">
+						<label for="book" class="form-label">رفع الكتاب</label>
+						<input class="form-control" type="file" id="book" name="book">
+					</div>
+					<div class="input-group mb-3">
+						<div class="form-floating">
+							<input type="text" class="form-control" id="bookTitle" name="bookTitle" placeholder="مثال: تطوير الويب">
+							<label for="bookTitle" class="form-label">عنوان الكتاب</label>
+						</div>
+						<div class="form-floating">
+							<input type="text" class="form-control" id="profName" name="profName" placeholder="مثال: محمد قاسم">
+							<label for="profName" class="form-label">إسم الأستاذ</label>
+						</div>
+					</div>
+					<FilterBar Params={params} />
+					<div class="mt-3">
+						<label for="bookCover" class="form-label">غلاف الكتاب (اختياري)</label>
+						<input class="form-control" type="file" id="bookCover" name="bookCover" aria-describedby="bookCoverHelpBlock">
+						<div id="bookCoverHelpBlock" class="form-text">إذا لم ترفع غلاف للكتاب، سيتم أخذ الصفحة الأولى كغلاف</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">الغاء</button>
+					<button type="submit" class="btn btn-primary focus-ring fw-bold">رفع</button>
+				</div>
+			</div>
+		</div>
+	</form>
 	
-	<Table head={head} data={data}>
+	<Table head={["العنوان", "الأستاذ", "الكلية", "القسم", "المرحلة", "الكورس"]} data={data} />
+	
+	<nav aria-label="التنقل">
+		<ul class="pagination justify-content-center">
+			<li class={`page-item ${currentPage === 1 ? 'disabled' : ''}`}><a class="page-link" href={`?p=${currentPage - 1}`}>&laquo; الماضي</a></li>
+			<li class="page-item active"><a class="page-link" href="#" aria-current="page">{currentPage}</a></li>
+			<li class={`page-item ${currentPage >= totalPages ? 'disabled' : ''}`}><a class="page-link" href={`?p=${currentPage + 1}`}>التالي &raquo;</a></li>
+		</ul>
+	</nav>
+	
 </Layout>

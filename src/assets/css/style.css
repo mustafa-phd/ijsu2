@@ -1,9 +1,10 @@
 html,body{height:100%}
 .hero{background:#07325d;color:#fff;min-height:100%;align-items:center}
 .roow{width:100%;display:flex;justify-content:space-between}
-.i{transform:scaleX(-1);filter:FlipH}
 .ratio.a4{--bs-aspect-ratio:141.42%}
 
-.login-card{overflow:hidden;width:100%;max-width:450px}
+.login-card{width:100%;max-width:450px}
 .login-card img{width:40%}
-
+.w-600{max-width:600px}
+.bi{display:inline-block;font-family:bootstrap-icons !important;font-style:normal;font-weight:normal !important;font-variant:normal;text-transform:none;line-height:1;vertical-align:-.125em;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+.rtl{transform:scaleX(-1);filter:FlipH}
