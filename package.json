@@ -13,7 +13,7 @@
 		"server": "node dist/server/entry.mjs"
 	},
 	"dependencies": {
-		"astro": "^5.15.1",
+		"astro": "^5.15.9",
 		"@astrojs/node": "^9.5.1",
 		"googleapis": "^166.0.0",
 		"better-sqlite3": "^12.4.6",
