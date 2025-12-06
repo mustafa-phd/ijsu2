@@ -1,0 +1,22 @@
+---
+const {params, currentPage, totalPages} = Astro.props
+const prevPage = new URLSearchParams(params)
+prevPage.set("p", currentPage - 1)
+const nextPage = new URLSearchParams(params)
+nextPage.set("p", currentPage + 1)
+---
+<nav aria-label="التنقل">
+	<ul class="pagination justify-content-center">
+		{currentPage <= 1 ? (
+		<li class="page-item disabled"><span class="page-link">&laquo; السابق</span></li>
+		) : (
+		<li class="page-item"><a class="page-link" href={`?${prevPage}`}>&laquo; الماضي</a></li>
+		)}
+		<li class="page-item active"><span class="page-link">الصفحة {currentPage}</span></li>
+		{currentPage >= totalPages ? (
+		<li class="page-item disabled"><span class="page-link">التالي &raquo;</span></li>
+		) : (
+		<li class="page-item"><a class="page-link" href={`?${nextPage}`}>التالي &raquo;</a></li>
+		)}
+	</ul>
+</nav>

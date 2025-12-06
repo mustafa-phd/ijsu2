@@ -1,42 +1,47 @@
 ---
 const title = "الكتب"
+const params = Astro.url.searchParams
 import Layout from '../layouts/Layout.astro'
 import FilterBar from '../components/FilterBar.astro'
 import SearchBar from '../components/SearchBar.astro'
+import Pagination from '../components/Pagination.astro'
 import { getBooks } from '../utils/books.js'
-const { books, totalPages, currentPage } = getBooks({ query: params.get('q'), queryType: params.get('qType'), college: params.get('college'), department: params.get('department'), stage: params.get('stage'), course: params.get('course'), page: params.get('p') })
-const params = Astro.url.searchParams
+const p = Number(params.get('p'))
+const currentPage = (p > 0) ? p : 1
+const q = params.get('q')
+const type = params.get('type')
+const { books, totalPages } = getBooks({ q, type, college: params.get('college'), department: params.get('department'), stage: params.get('stage'), course: params.get('course'), currentPage: currentPage })
 ---
 
 <Layout title={title} mainClass="p-4 container">
-	<nav class="navbar navbar-expand-lg px-2 bg-primary" data-bs-theme="dark" slot="nav">
-		<div class="container-xl">
-			<div class="col">
+	<nav class="navbar navbar-expand-lg px-2 bg-lib" data-bs-theme="dark" slot="nav" transition:persist="nav">
+		<div class="container-lg">
+			<div class="col-lg">
 				<button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterBar" aria-controls="filterBar" aria-expanded="false" aria-label="فتح حقول الفلترة">
 					<span class="navbar-toggler-icon"></span>
 				</button>
-				<div class="offcanvas offcanvas-top bg-primary" tabindex="-1" id="filterBar" aria-labelledby="filterBarLabel">
+				<div class="offcanvas offcanvas-top bg-lib" tabindex="-1" id="filterBar" aria-labelledby="filterBarLabel">
 					<div class="offcanvas-header">
 						<h5 class="offcanvas-title" id="filterBarLabel">فلترة الكتب</h5>
 						<button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="اغلاق"></button>
 					</div>
 					<div class="offcanvas-body">
-						<FilterBar Router={true} Params={params} />
+						<FilterBar Params={params} />
 						<button class="btn btn-success mt-3 w-100 d-lg-none" type="button" data-bs-dismiss="offcanvas" >عرض</button>
 					</div>
 				</div>
 			</div>
-			<div class="col-auto">
+			<div class="col-lg-auto">
 				<a class="navbar-brand ms-3" href="/">
 					<img src="/assets/logo/96x96.png" alt="ijsu" width="46" height="46" transition:name="logo">
 				</a>
 			</div>
-			<div class="col">
+			<div class="col-lg">
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#searchBar" aria-controls="searchBar" aria-expanded="false" aria-label="فتح حقل البحث">
 					<span class="navbar-toggler-icon"></span>
 				</button>
 				<div class="collapse navbar-collapse" id="searchBar">
-					<SearchBar/>
+					<SearchBar q={q} type={type} />
 				</div>
 			</div>
 		</div>
@@ -51,7 +56,7 @@ const params = Astro.url.searchParams
 		<div class="col">
 			<div class="card h-100">
 				<div class="ratio a4">
-					<img src={book.cover_path} class="card-img-top" alt={`غلاف كتاب ${book.title}`}  loading="lazy">
+					<img src={`/assets/books/${book.cover}`} class="card-img-top" alt={`غلاف كتاب ${book.title}`}  loading="lazy">
 				</div>
 				<div class="card-body">
 					<h5 class="card-title">{book.title}</h5>
@@ -59,10 +64,10 @@ const params = Astro.url.searchParams
 					<p class="card-text">الأستاذ: {book.profName}</p>
 					<div class="row">
 						<div class="col">
-							<a class="btn btn-primary w-100" href={book.file_path} target="_blank" role="button">قراءة</a>
+							<a class="btn btn-lib w-100" href={book.id} target="_blank" role="button">قراءة</a>
 						</div>
 						<div class="col">
-							<a class="btn btn-success w-100" href={book.file_path} target="_blank" role="button">تحميل</a>
+							<a class="btn btn-success w-100" href={book.id} target="_blank" role="button">تحميل</a>
 						</div>
 					</div>
 				</div>
@@ -78,16 +83,10 @@ const params = Astro.url.searchParams
 	</div>
 	<p class="mb-1">عذراً، لم نجد أي كتب تطابق معايير بحثك.</p>
 	<hr>
-	<a class="btn btn-outline-primary" href="/books/" role="button">الغاء البحث</a>
+	<a class="btn btn-lib" href="/books/" role="button">الغاء البحث</a>
 </div>
 )}
 	
-	<nav aria-label="التنقل">
-		<ul class="pagination justify-content-center">
-			<li class={`page-item ${currentPage === 1 ? 'disabled' : ''}`}><a class="page-link" href={`?p=${currentPage - 1}`}>&laquo; الماضي</a></li>
-			<li class="page-item active"><a class="page-link" href="#" aria-current="page">{currentPage}</a></li>
-			<li class={`page-item ${currentPage >= totalPages ? 'disabled' : ''}`}><a class="page-link" href={`?p=${currentPage + 1}`}>التالي &raquo;</a></li>
-		</ul>
-	</nav>
+	<Pagination params={params} currentPage={currentPage} totalPages={totalPages} />
 	
 </Layout>

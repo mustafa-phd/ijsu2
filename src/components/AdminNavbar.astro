@@ -1,0 +1,23 @@
+---
+const nav = [
+	{label: 'إدارة الكتب', href: '/lms/'},
+	{label: 'إدارة الأعضاء', href: '/lms/users/'},
+	{label: 'إدارة الحساب', href: '/lms/profile/'}
+]
+const {pathname} = Astro.url
+---
+
+<nav class="navbar navbar-expand-lg px-2 bg-lib border-bottom border-body" data-bs-theme="dark" aria-label="شريط التنقل الرئيسي">
+	<div class="container">
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#searchBar" aria-controls="searchBar" aria-expanded="false" aria-label="فتح حقل البحث">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="adminNavbarContent">
+			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+				{nav.map((item) => (
+					<li class="nav-item"><a class={`nav-link ${pathname === item.href ? 'active' : ''}`} aria-current={pathname === item.href ? "page" : null} href={item.href}>{item.label}</a></li>
+				))}
+			</ul>
+		</div>
+	</div>
+</nav>

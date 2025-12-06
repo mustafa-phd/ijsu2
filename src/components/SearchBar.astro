@@ -1,14 +1,17 @@
+---
+const {q, type} = Astro.props
+---
 <form class="input-group" role="search">
 	<div class="form-floating w-50">
-		<input type="search" class="form-control" id="search" name="search" placeholder="تطوير الويب" aria-describedby="searchBtn">
-		<label for="search">البحث</label>
+		<input type="search" class="form-control" id="q" name="q" placeholder="تطوير الويب" value={q} aria-describedby="searchBtn">
+		<label for="q">البحث</label>
 	</div>
 	<div class="form-floating w-auto">
-		<select class="form-select" id="searchType" name="searchType">
-			<option value="book">إسم كتاب</option>
-			<option value="prof">إسم الأستاذ</option>
+		<select class="form-select" id="type" name="type">
+			<option value="" selected={type !== "prof"}>إسم كتاب</option>
+			<option value="prof" selected={type === "prof"}>إسم الأستاذ</option>
 		</select>
-		<label for="searchType">نوع البحث</label>
+		<label for="type">نوع البحث</label>
 	</div>
 	<button type="submit" class="btn btn-success w-auto" id="searchBtn">بحث</button>
 </form>

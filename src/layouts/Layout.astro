@@ -2,6 +2,8 @@
 import '../assets/css/style.css';
 import { ClientRouter } from "astro:transitions";
 const { title, description, htmlClass, bodyClass, mainClass } = Astro.props;
+const siteTitle = 'مكتبة جامعة الأمام جعفر الصادق (ع)'
+const fullTitle = Astro.url.pathname === '/' ? siteTitle : `${siteTitle} · ${title}`
 ---
 <!doctype html>
 <html lang="ar" dir="rtl" class:list={[htmlClass]}>
@@ -9,7 +11,7 @@ const { title, description, htmlClass, bodyClass, mainClass } = Astro.props;
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.rtl.min.css">
-		<title>{title}</title>
+		<title>{fullTitle}</title>
 		<ClientRouter/>
 	</head>
 	<body class:list={[bodyClass]}>
@@ -18,6 +20,6 @@ const { title, description, htmlClass, bodyClass, mainClass } = Astro.props;
 		<main class:list={[mainClass]}>
 			<slot/>
 		</main>
-		<script is:inline src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js"></script>
+		{Astro.url.pathname === '/' ? (<script is:inline src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js"></script>): ()}
 	</body>
 </html>

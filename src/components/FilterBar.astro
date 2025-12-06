@@ -1,6 +1,5 @@
 ---
 import schema from '../utils/schema.json'
-const {Router} = Astro.props
 const params = Astro.url.searchParams
 const pCollege = params.get('college')
 const pDepartment = params.get('department')
@@ -8,11 +7,11 @@ const pStage = params.get('stage')
 const pCourse = params.get('course')
 const departments = (pCollege && schema.colleges[pCollege]) || []
 ---
-<div class="row row-cols-1 row-cols-lg-2 g-2">
+<div class="routers row row-cols-1 row-cols-lg-2 g-2">
 	<div class="col">
 		<div class="input-group">
 			<div class="form-floating">
-				<select class="router form-select" id="college" name="college">
+				<select class="form-select" id="college" name="college">
 					<option value="">الكل</option>
 					{Object.keys(schema.colleges).map((cName) => (
 						<option value={cName} selected={cName === pCollege}>{cName}</option>
@@ -21,7 +20,7 @@ const departments = (pCollege && schema.colleges[pCollege]) || []
 				<label for="college">الكلية</label>
 			</div>
 			<div class="form-floating">
-				<select class="router form-select" id="department" name="department" disabled={!pCollege}>
+				<select class="form-select" id="department" name="department" disabled={!pCollege}>
 					<option value="">الكل</option>
 					{departments.map((dName) => (
 						<option value={dName} selected={dName === pDepartment}>{dName}</option>
@@ -34,7 +33,7 @@ const departments = (pCollege && schema.colleges[pCollege]) || []
 	<div class="col">
 		<div class="input-group">
 			<div class="form-floating">
-				<select class="router form-select" id="stage" name="stage">
+				<select class="form-select" id="stage" name="stage">
 					<option value="">الكل</option>
 					{schema.stages.map((sName) => (
 						<option value={sName} selected={sName === pStage}>{sName}</option>
@@ -43,7 +42,7 @@ const departments = (pCollege && schema.colleges[pCollege]) || []
 				<label for="stage">المرحلة</label>
 			</div>
 			<div class="form-floating">
-				<select class="router form-select" id="course" name="course">
+				<select class="form-select" id="course" name="course">
 					<option value="">الكل</option>
 					{schema.courses.map((cName) => (
 						<option value={cName} selected={cName === pCourse}>{cName}</option>
@@ -54,16 +53,21 @@ const departments = (pCollege && schema.colleges[pCollege]) || []
 		</div>
 	</div>
 </div>
-{Router && (
 <script>
-document.querySelectorAll('.router').forEach(select => {
-	select.addEventListener('change', function() {
-		const url = new URL(location)
-		const param = this.name
-		param == 'college' && url.searchParams.delete('department')
-		this.value ? url.searchParams.set(param, this.value) : url.searchParams.delete(param)
-		location.href = url
+import { navigate } from 'astro:transitions/client'
+document.addEventListener("astro:page-load", () => {
+	document.querySelectorAll('.routers select').forEach(select => {
+		select.addEventListener('change', function() {
+			const url = new URL(location)
+			const param = this.name
+			param == 'college' && url.searchParams.delete('department')
+			this.value ? url.searchParams.set(param, this.value) : url.searchParams.delete(param)
+			navigate(url.toString())
+		})
 	})
 })
+document.addEventListener('astro:before-swap', e =>
+    e.newDocument.querySelectorAll('.routers').forEach((n, i) => 
+      document.querySelectorAll('.routers')[i]?.replaceWith(n)
+))
 </script>
-)}

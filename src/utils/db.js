@@ -9,15 +9,17 @@ db.exec(`
 	PRAGMA busy_timeout = 10000;
 	PRAGMA foreign_keys = ON;
 	
-	CREATE TABLE IF NOT EXISTS books (id INTEGER PRIMARY KEY,
-		title TEXT, profName TEXT, file_path TEXT, cover_path TEXT,
-		college TEXT, department TEXT, stage TEXT, course TEXT
+	CREATE TABLE IF NOT EXISTS books (id TEXT PRIMARY KEY,
+		title TEXT, profName TEXT, cover TEXT,
+		college TEXT, department TEXT, stage TEXT, course TEXT, 
+		publisherId TEXT, FOREIGN KEY(publisherId) REFERENCES user(id) ON DELETE CASCADE
 	) STRICT;
 	CREATE INDEX IF NOT EXISTS idx_title ON books(title);
 	CREATE INDEX IF NOT EXISTS idx_prof ON books(profName);
 	CREATE INDEX IF NOT EXISTS idx_hierarchy ON books(college, department);
 	CREATE INDEX IF NOT EXISTS idx_stage ON books(stage);
 	CREATE INDEX IF NOT EXISTS idx_course ON books(course);
+	CREATE INDEX IF NOT EXISTS idx_publisher ON books(publisherId);
 `)
 db.pragma('optimize')
 

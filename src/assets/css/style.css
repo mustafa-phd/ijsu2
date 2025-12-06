@@ -6,5 +6,11 @@ html,body{height:100%}
 .login-card{width:100%;max-width:450px}
 .login-card img{width:40%}
 .w-600{max-width:600px}
-.bi{display:inline-block;font-family:bootstrap-icons !important;font-style:normal;font-weight:normal !important;font-variant:normal;text-transform:none;line-height:1;vertical-align:-.125em;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
-.rtl{transform:scaleX(-1);filter:FlipH}
+.bi{display:inline-block;fill:currentColor;font-family:bootstrap-icons !important;font-style:normal;font-weight:normal !important;font-variant:normal;text-transform:none;line-height:1;vertical-align:-.125em;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+
+.bg-lib{background-color:#07325d}
+.btn-lib{--bs-btn-color:#fff;--bs-btn-bg:#07325d;--bs-btn-border-color:#07325d;--bs-btn-hover-color:#fff;--bs-btn-hover-bg:#062a4f;--bs-btn-hover-border-color:#052444;--bs-btn-focus-shadow-rgb:45, 86, 129;--bs-btn-active-color:#fff;--bs-btn-active-bg:#052444;--bs-btn-active-border-color:#05223f}
+
+.navbar input,.navbar select{background-color:rgba(0, 0, 0,.2)}
+.navbar input:focus,.navbar select:focus{background-color:rgba(0,0,0,.3)}
+.navbar select:disabled{background-color:rgba(255,255,255,.1)}

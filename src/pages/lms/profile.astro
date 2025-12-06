@@ -1,24 +1,21 @@
 ---
-const title = "الإعدادات"
+const title = "إدارة الحساب"
+const user = Astro.locals.user
 import Layout from '../../layouts/Layout.astro'
+import AdminNavbar from '../../components/AdminNavbar.astro'
 import { auth } from "../../utils/auth"
 const passkeys = await auth.api.listPasskeys({headers: await Astro.request.headers})
+import { deleteAllBooks } from '../../utils/books.js'
+if (Astro.request.method === 'DELETE') {
+	const res = await deleteAllBooks(user.id)
+	return new Response(res.status ? null : res.message, { status: res.status ? 204 : 500 })
+}
 ---
 <Layout title={title} mainClass="container p-4 mx-auto w-600">
-	<nav class="navbar navbar-expand-lg px-2 bg-primary border-bottom border-body" data-bs-theme="dark" slot="nav">
-		<div class="container">
-			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#searchBar" aria-controls="searchBar" aria-expanded="false" aria-label="فتح حقل البحث">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-			<div class="collapse navbar-collapse" id="searchBar">
-				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-					<li class="nav-item"><a class="nav-link active" aria-current="page" href="/lms/">الإدارة</a></li>
-					<li class="nav-item"><a class="nav-link" href="/lms/users/">إدارة اعضاء</a></li>
-				</ul>
-			</div>
-		</div>
-	</nav>
-	<h1>{title}</h1>
+	<AdminNavbar slot="nav"/>
+	<header class="container p-4" slot="header">
+		<h1>{title}</h1>
+	</header>
 	<form class="card my-5 needs-validation" novalidate id="edit">
 		<div class="card-body">
 			<div class="alert alert-danger d-none d-flex align-items-center shadow-sm mb-3" role="alert" id="alert" dir="ltr">
@@ -63,7 +60,7 @@ const passkeys = await auth.api.listPasskeys({headers: await Astro.request.heade
 				<p class="mb-1">هذه الإجراءات لا يمكن التراجع عنها، يرجى الحذر.</p>
 				<hr>
 				<div class="mb-3 row">
-					<div class="col"><button type="button" class="btn btn-danger w-100"><svg class="bi" viewBox="0 0 16 16" width="16" height="16" role="img"><path d="M.54 3.87.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3h3.982a2 2 0 0 1 1.992 2.181L15.546 8H14.54l.265-2.91A1 1 0 0 0 13.81 4H2.19a1 1 0 0 0-.996 1.09l.637 7a1 1 0 0 0 .995.91H9v1H2.826a2 2 0 0 1-1.991-1.819l-.637-7a2 2 0 0 1 .342-1.31zm6.339-1.577A1 1 0 0 0 6.172 2H2.5a1 1 0 0 0-1 .981l.006.139q.323-.119.684-.12h5.396z"/><path d="M11.854 10.146a.5.5 0 0 0-.707.708L12.293 12l-1.146 1.146a.5.5 0 0 0 .707.708L13 12.707l1.146 1.147a.5.5 0 0 0 .708-.708L13.707 12l1.147-1.146a.5.5 0 0 0-.707-.708L13 11.293z"/></svg> حذف كتب</button></div>
+					<div class="col"><button type="button" class="btn btn-danger w-100" id="deleteBook"><svg class="bi" viewBox="0 0 16 16" width="16" height="16" role="img"><path d="M.54 3.87.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3h3.982a2 2 0 0 1 1.992 2.181L15.546 8H14.54l.265-2.91A1 1 0 0 0 13.81 4H2.19a1 1 0 0 0-.996 1.09l.637 7a1 1 0 0 0 .995.91H9v1H2.826a2 2 0 0 1-1.991-1.819l-.637-7a2 2 0 0 1 .342-1.31zm6.339-1.577A1 1 0 0 0 6.172 2H2.5a1 1 0 0 0-1 .981l.006.139q.323-.119.684-.12h5.396z"/><path d="M11.854 10.146a.5.5 0 0 0-.707.708L12.293 12l-1.146 1.146a.5.5 0 0 0 .707.708L13 12.707l1.146 1.147a.5.5 0 0 0 .708-.708L13.707 12l1.147-1.146a.5.5 0 0 0-.707-.708L13 11.293z"/></svg> حذف كتب</button></div>
 					<div class="col"><button type="button" class="btn btn-danger w-100" id="deleteAccount"><svg class="bi" viewBox="0 0 16 16" width="16" height="16" role="img"><path fill-rule="evenodd" d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m6.146-2.854a.5.5 0 0 1 .708 0L14 6.293l1.146-1.147a.5.5 0 0 1 .708.708L14.707 7l1.147 1.146a.5.5 0 0 1-.708.708L14 7.707l-1.146 1.147a.5.5 0 0 1-.708-.708L13.293 7l-1.147-1.146a.5.5 0 0 1 0-.708"/></svg> حذف حساب</button></div>
 				</div>
 			</div>
@@ -74,6 +71,8 @@ const passkeys = await auth.api.listPasskeys({headers: await Astro.request.heade
 	</form>
 	<script>
 		import { authClient } from "../../utils/authClient"
+		import { navigate } from 'astro:transitions/client'
+	document.addEventListener("astro:page-load", () => {
 		const form = document.getElementById('edit')
 		const alertTag = document.getElementById('alert')
 		const alertMsg = document.getElementById('alertMsg')
@@ -145,7 +144,14 @@ const passkeys = await auth.api.listPasskeys({headers: await Astro.request.heade
 				}
 			})
 		})
+		document.getElementById('deleteBook').addEventListener('click', () => {
+			if (!confirm('هل تريد حذف جميع الكتب؟')) return
+			fetch('/lms/profile/', {method: 'DELETE', credentials: 'include'}).then(res => {
+				res.ok ? navigate("/lms/", { history: 'replace' }) : alert('تعذر الحذف')
+			})
+		})
 		document.getElementById('deleteAccount').addEventListener('click', async () => {
+		if (!confirm('هل تريد حذف حسابك؟')) return
 			await authClient.deleteUser({
 				callbackURL: "/"
 			})
@@ -159,5 +165,6 @@ const passkeys = await auth.api.listPasskeys({headers: await Astro.request.heade
 				}
 			})
 		})
+	})
 	</script>
 </Layout>

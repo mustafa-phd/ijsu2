@@ -21,7 +21,7 @@ const {head, data, foot} = Astro.props
 			{row.slice(2).map(col => (
 				<td>{col}</td>
 			))}
-				<td><button type="button" class="btn btn-danger" id={row[0]}>حذف</button></td>
+				<td><button type="button" class="btn btn-danger delete" id={row[0]}>حذف</button></td>
 			</tr>
 		))}
 		</tbody>

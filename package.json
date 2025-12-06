@@ -4,8 +4,8 @@
 	"version": "1.0.0",
 	"private": true,
 	"scripts": {
-		"auth:generate": "npx better-auth/cli generate --config ./src/utils/auth.js --yes",
-		"auth:migrate": "npx better-auth/cli migrate --config ./src/utils/auth.js --yes",
+		"auth:generate": "npx @better-auth/cli generate --config src/utils/auth.js --yes",
+		"auth:migrate": "npx @better-auth/cli migrate --config src/utils/auth.js --yes",
 		"astro": "astro",
 		"dev": "astro dev",
 		"build": "astro build",

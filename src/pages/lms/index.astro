@@ -1,90 +1,130 @@
 ---
 const title = "إدارة الكتب"
+const params = Astro.url.searchParams
+const user = Astro.locals.user
 import Layout from '../../layouts/Layout.astro'
+import AdminNavbar from '../../components/AdminNavbar.astro'
 import FilterBar from '../../components/FilterBar.astro'
 import SearchBar from '../../components/SearchBar.astro'
 import Table from '../../components/Table.astro'
-const params = Astro.url.searchParams
-import { getBooks } from '../../utils/books.js'
-const { books, totalPages, currentPage } = getBooks({ query: params.get('q'), queryType: params.get('qType'), college: params.get('college'), department: params.get('department'), stage: params.get('stage'), course: params.get('course'), page: params.get('p') })
-const data = books.map((book) => ([book.id, book.title, book.profName, book.college, book.department, book.stage, book.course]))
+import { getBooks, insertBook, deleteBook } from '../../utils/books.js'
+import Pagination from '../../components/Pagination.astro'
+const p = Number(params.get('p'))
+const currentPage = (p > 0) ? p : 1
+const q = params.get('q')
+const type = params.get('type')
+const { books, totalPages } = getBooks({ q, type, college: params.get('college'), department: params.get('department'), stage: params.get('stage'), course: params.get('course'), currentPage: currentPage, role: user.role, publisherId: user.id })
+if (Astro.request.method === "POST") {
+	const data = await Astro.request.formData()
+	const res = await addBook({title: data.get("title"), prof: data.get("prof"), file: data.get("file"), cover: data.get("cover"), college: data.get('college'), department: data.get('department'), stage: data.get('stage'), course: data.get('course'), publisherId: user.id})
+	return new Response(res.status ? null : res.message, { status: res.status ? 204 : 500 })
+}
+if (Astro.request.method === 'DELETE') {
+	const data = await Astro.request.json()
+	const res = await deleteBook({role: user.role, publisherId: user.id, id: data.id})
+	return new Response(null, { status: res ? 204 : 500 })
+}
 ---
-
-<Layout title={title}>
-	<nav class="navbar navbar-expand-lg px-2 bg-primary border-bottom border-body" data-bs-theme="dark" slot="nav">
-		<div class="container">
-			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#searchBar" aria-controls="searchBar" aria-expanded="false" aria-label="فتح حقل البحث">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-			<div class="collapse navbar-collapse" id="searchBar">
-				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-					<li class="nav-item"><a class="nav-link active" aria-current="page" href="#">الإدارة</a></li>
-					<li class="nav-item"><a class="nav-link" href="#">إدارة اعضاء</a></li>
-				</ul>
-			</div>
-		</div>
-	</nav>
+<Layout title={title} mainClass="container p-3">
+	<AdminNavbar slot="nav"/>
 	
-	<div class="p-4">
+	<header class="container p-4" slot="header" transition:persist="manager">
 		<div class="d-flex justify-content-between mb-5">
 			<h1>{title}</h1>
 			<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add">إضافة كتاب</button>
 		</div>
+		<form method="post" enctype="multipart/form-data" class="modal fade needs-validation" novalidate id="add" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="addLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-scrollable">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h2 class="modal-title fs-5" id="addLabel">معلومات الكتاب</h2>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="الغاء"></button>
+					</div>
+					<div class="modal-body">
+						<div class="alert alert-danger d-none d-flex align-items-center shadow-sm mb-3" role="alert" id="alert" dir="ltr">
+							<svg class="bi flex-shrink-0 ms-2" viewBox="0 0 16 16" width="16" height="16" role="img"><path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg>
+							<div id="alertMsg"></div>
+						</div>
+						<div class="mb-3">
+							<label for="book" class="form-label">رفع الكتاب</label>
+							<input class="form-control" type="file" id="file" name="file" required>
+						</div>
+						<div class="input-group mb-3">
+							<div class="form-floating">
+								<input type="text" class="form-control" id="title" name="title" placeholder="مثال: تطوير الويب" required>
+								<label for="title" class="form-label">عنوان الكتاب</label>
+							</div>
+							<div class="form-floating">
+								<input type="text" class="form-control" id="prof" name="prof" placeholder="مثال: محمد قاسم" required>
+								<label for="prof" class="form-label">إسم الأستاذ</label>
+							</div>
+						</div>
+						<FilterBar />
+						<div class="mt-3">
+							<label for="cover" class="form-label">غلاف الكتاب (اختياري)</label>
+							<input class="form-control" type="file" id="cover" name="cover" aria-describedby="coverHelpBlock" required>
+							<!--div id="coverHelpBlock" class="form-text">إذا لم ترفع غلاف للكتاب، سيتم أخذ الصفحة الأولى كغلاف</div-->
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="reset" class="btn btn-secondary" data-bs-dismiss="modal"><svg class="bi" viewBox="0 0 16 16" width="16" height="16" role="img"><path fill-rule="evenodd" d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m6.146-2.854a.5.5 0 0 1 .708 0L14 6.293l1.146-1.147a.5.5 0 0 1 .708.708L14.707 7l1.147 1.146a.5.5 0 0 1-.708.708L14 7.707l-1.146 1.147a.5.5 0 0 1-.708-.708L13.293 7l-1.147-1.146a.5.5 0 0 1 0-.708"/></svg> الغاء</button>
+						<button type="submit" class="btn btn-primary focus-ring fw-bold">
+							<span class="spinner-grow spinner-grow-sm d-none" id="btnSpinner" role="status" aria-hidden="true"></span>
+							<span id="btnText">رفع <svg class="bi" viewBox="0 0 16 16" width="16" height="16" role="img"><path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/><path d="M2 13c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4"/></svg></span>
+						</button>
+					</div>
+				</div>
+			</div>
+		</form>
 		
 		<div class="row row-cols-1 row-cols-lg-2 g-3">
 			<div class="col">
-				<FilterBar Router={true} />
+				<FilterBar />
 			</div>
 			<div class="col">
-				<SearchBar/>
+				<SearchBar q={q} type={type} />
 			</div>
 		</div>
-	</div>
-	<form method="post" enctype="multipart/form-data" class="modal fade needs-validation" novalidate id="add" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="addLabel" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-scrollable">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h2 class="modal-title fs-5" id="addLabel">معلومات الكتاب</h2>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="الغاء"></button>
-				</div>
-				<div class="modal-body">
-					<div class="mb-3">
-						<label for="book" class="form-label">رفع الكتاب</label>
-						<input class="form-control" type="file" id="book" name="book">
-					</div>
-					<div class="input-group mb-3">
-						<div class="form-floating">
-							<input type="text" class="form-control" id="bookTitle" name="bookTitle" placeholder="مثال: تطوير الويب">
-							<label for="bookTitle" class="form-label">عنوان الكتاب</label>
-						</div>
-						<div class="form-floating">
-							<input type="text" class="form-control" id="profName" name="profName" placeholder="مثال: محمد قاسم">
-							<label for="profName" class="form-label">إسم الأستاذ</label>
-						</div>
-					</div>
-					<FilterBar Params={params} />
-					<div class="mt-3">
-						<label for="bookCover" class="form-label">غلاف الكتاب (اختياري)</label>
-						<input class="form-control" type="file" id="bookCover" name="bookCover" aria-describedby="bookCoverHelpBlock">
-						<div id="bookCoverHelpBlock" class="form-text">إذا لم ترفع غلاف للكتاب، سيتم أخذ الصفحة الأولى كغلاف</div>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">الغاء</button>
-					<button type="submit" class="btn btn-primary focus-ring fw-bold">رفع</button>
-				</div>
-			</div>
-		</div>
-	</form>
+	</header>
 	
-	<Table head={["العنوان", "الأستاذ", "الكلية", "القسم", "المرحلة", "الكورس"]} data={data} />
+	<Table head={["العنوان", "الأستاذ", "الكلية", "القسم", "المرحلة", "الكورس"]} data={books.map((book) => ([book.id, book.title, book.profName, book.college, book.department, book.stage, book.course]))} />
+	<Pagination params={params} currentPage={currentPage} totalPages={totalPages} />
 	
-	<nav aria-label="التنقل">
-		<ul class="pagination justify-content-center">
-			<li class={`page-item ${currentPage === 1 ? 'disabled' : ''}`}><a class="page-link" href={`?p=${currentPage - 1}`}>&laquo; الماضي</a></li>
-			<li class="page-item active"><a class="page-link" href="#" aria-current="page">{currentPage}</a></li>
-			<li class={`page-item ${currentPage >= totalPages ? 'disabled' : ''}`}><a class="page-link" href={`?p=${currentPage + 1}`}>التالي &raquo;</a></li>
-		</ul>
-	</nav>
-	
+	<script>
+	import { navigate } from 'astro:transitions/client'
+	document.addEventListener("astro:page-load", () => {
+		const form = document.getElementById('add')
+		const alertTag = document.getElementById('alert')
+		const alertMsg = document.getElementById('alertMsg')
+		const formState = (is) => {
+			const formControls = form.querySelectorAll('input, button, select')
+			const btnSpinner = document.getElementById('btnSpinner')
+			const btnText = document.getElementById('btnText')
+			formControls.forEach(control => { control.disabled = is })
+		    if (is) {
+		        btnSpinner.classList.remove('d-none')
+		        btnText.textContent = "جاري المعالجة..."
+		    } else {
+		        btnSpinner.classList.add('d-none')
+		        btnText.textContent = "رفع"
+		    }
+		}
+		form.addEventListener("submit", async (e) => {
+			form.classList.add('was-validated')
+			if (!form.checkValidity()){
+				e.preventDefault()
+				return
+			}
+			bootstrap.Modal.getInstance(form).hide()
+		})
+		document.querySelectorAll('.delete').forEach((btn) => {
+			btn.addEventListener('click', () => {
+				if (!confirm('هل تريد حذف هذا الكتاب؟')) return
+				fetch('/lms/', {method: 'DELETE', credentials: 'include', headers: { 'Content-Type': 'application/json' },body: JSON.stringify({ id: btn.id })}).then(res => {
+					res.ok ? navigate(location.href, { history: 'replace' }) : alert('تعذر الحذف')
+				})
+			})
+		})
+	})
+	</script>
 </Layout>

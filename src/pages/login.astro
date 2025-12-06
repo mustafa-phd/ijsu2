@@ -41,7 +41,7 @@ if (session) return Astro.redirect("/lms/")
 	<footer class="card-footer ">
 		<p class="text-sm text-center my-1">&copy; 2025 جميع الحقوق محفوظة.</p>
 	</footer>
-	<script>
+	<script data-astro-rerun>
 		import { authClient } from "../utils/authClient"
 		const form = document.getElementById('login')
 		const alertTag = document.getElementById('alert')
